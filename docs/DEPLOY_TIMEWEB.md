@@ -117,11 +117,20 @@ Timeweb предоставляет почтовый сервис для доме
 ### Шаг 1: Создание приложения
 
 1. Перейдите в **App Platform** → **Создать приложение**
-2. Выберите **Dockerfile**
-3. Укажите репозиторий: `rebekaee1/boevoebratstvo`
-4. **Путь к Dockerfile:** `backend/Dockerfile`
+2. Выберите тип: **Docker** → **Dockerfile**
+3. Подключите репозиторий GitHub:
+   - Нажмите **Добавить аккаунт**
+   - Авторизуйтесь в GitHub
+   - Выберите репозиторий: `rebekaee1/boevoebratstvo`
+   - Ветка: `main`
+4. **Путь к Dockerfile в репозитории:**
+   - Timeweb автоматически ищет Dockerfile в корне
+   - Используйте файл: **`Dockerfile.backend`**
+   - ⚠️ **ВАЖНО:** При создании приложения укажите имя, например: `nasledniki-backend`
 5. **Регион:** Россия / Санкт-Петербург
-6. **Конфигурация:** Минимум 1 CPU, 1 ГБ RAM (рекомендуется 2 ГБ)
+6. **Конфигурация:** 
+   - Фиксированная: 1 CPU, 2 ГБ RAM, 30 ГБ NVMe (~810 ₽/мес)
+   - **Рекомендуется:** 1 × 3.3 ГГц, 2 ГБ RAM, 30 ГБ (~810 ₽/мес)
 
 ### Шаг 2: Переменные окружения
 
@@ -129,25 +138,25 @@ Timeweb предоставляет почтовый сервис для доме
 
 | Переменная | Значение |
 |-----------|----------|
-| `DATABASE_URL` | `postgresql://user:pass@host:5432/nasledniki?schema=public` |
-| `JWT_SECRET` | (сгенерируйте: `openssl rand -hex 32`) |
-| `JWT_REFRESH_SECRET` | (сгенерируйте: `openssl rand -hex 32`) |
+| `DATABASE_URL` | `postgresql://gen_user:4jw%2Ce%3Ez6%3Fm%3B%7Def@192.168.0.4:5432/default_db` |
+| `JWT_SECRET` | | `afc9d83261c7033f223a0c4ab0a1dfe34d146029e8acb13cadc3fc86b3bd8c5d`) |
+| `JWT_REFRESH_SECRET` | `b174bf1a7a73c6b1acc617041802979edb87f23368a4f7e5db9e0325e2bb9140` |
 | `JWT_ACCESS_EXPIRATION` | `15m` |
 | `JWT_REFRESH_EXPIRATION` | `7d` |
 | `S3_ENDPOINT` | `https://s3.timeweb.cloud` |
 | `S3_BUCKET` | `nasledniki` |
-| `S3_ACCESS_KEY` | (ваш ключ из п.3) |
-| `S3_SECRET_KEY` | (ваш секрет из п.3) |
+| `S3_ACCESS_KEY` | `JZ2192J3O9WZEECOX6S7` |
+| `S3_SECRET_KEY` | `vstA7AVOA3b5Fi9Dq874qhruB31kFU8qCjBeBc70` |
 | `S3_REGION` | `ru-1` |
 | `SMTP_HOST` | `smtp.timeweb.ru` |
 | `SMTP_PORT` | `465` |
 | `SMTP_USER` | `noreply@наследникпобеды.рф` |
-| `SMTP_PASS` | (пароль) |
+| `SMTP_PASS` | `G=SU3PLA{kAgKr` |
 | `SMTP_FROM` | `Наследники Победы <noreply@наследникпобеды.рф>` |
 | `PORT` | `3000` |
 | `FRONTEND_URL` | `https://наследникпобеды.рф` |
 | `ADMIN_EMAIL` | `admin@наследникпобеды.рф` |
-| `ADMIN_PASSWORD` | (ваш пароль) |
+| `ADMIN_PASSWORD` | `BB1qw!_ra` |
 
 ### Шаг 3: Запуск деплоя
 
