@@ -204,8 +204,8 @@ export default function AdminDashboard() {
                           cx="50%"
                           cy="50%"
                           labelLine={{ stroke: '#e5e7eb' }}
-                          label={({ name, percent }) =>
-                            `${name}: ${(percent * 100).toFixed(0)}%`
+                          label={({ name, percent }: { name: string; percent?: number }) =>
+                            `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`
                           }
                           outerRadius={80}
                           fill="#8884d8"
@@ -328,7 +328,7 @@ export default function AdminDashboard() {
                           }}
                           itemStyle={{ color: '#d4a017' }}
                           labelStyle={{ color: '#fff', fontWeight: 600 }}
-                          formatter={(value: number) => [`${value} работ`, 'Количество']}
+                          formatter={(value: number) => [`${value} работ`, 'Количество'] as [string, string]}
                         />
                         <Bar dataKey="count" fill={COLORS.gold} radius={[0, 4, 4, 0]} />
                       </BarChart>
