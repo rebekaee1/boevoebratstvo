@@ -7,8 +7,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // CORS для фронтенда
+  // Поддержка кириллических доменов через Punycode
+  let frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+  try {
+    const url = new URL(frontendUrl);
+    frontendUrl = url.origin; // URL API автоматически конвертирует IDN в Punycode
+  } catch {
+    // Оставляем как есть если не валидный URL
+  }
+  
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: [frontendUrl, 'http://localhost:5173', 'http://localhost:4173'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
