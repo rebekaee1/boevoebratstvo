@@ -288,16 +288,46 @@ VITE_API_URL="https://api.nasledniki.example.com"
 
 ---
 
-## 🚢 Деплой в Timeweb App Platform
+## 🚢 Деплой на Timeweb Cloud
 
-1. Создайте репозиторий на GitHub
-2. В Timeweb Cloud создайте:
-   - Managed PostgreSQL
-   - Object Storage (S3)
-   - App Platform проект
-3. Подключите GitHub репозиторий
-4. Настройте переменные окружения
-5. Деплой произойдёт автоматически при push
+### Репозиторий
+
+**GitHub:** https://github.com/rebekaee1/boevoebratstvo
+
+**Ветки для деплоя:**
+- `deploy-backend` — backend (NestJS) с Dockerfile в корне
+- `deploy-frontend` — frontend (React) с Dockerfile в корне
+
+### Быстрый старт
+
+📖 **Пошаговая инструкция:** [docs/TIMEWEB_QUICKSTART.md](docs/TIMEWEB_QUICKSTART.md)
+
+**Кратко:**
+
+1. **Создайте сервисы в Timeweb Cloud:**
+   - PostgreSQL (Managed DB)
+   - S3 Storage (bucket: `nasledniki`)
+   - Почта для домена `наследникпобеды.рф`
+
+2. **Деплой Backend:**
+   - App Platform → Dockerfile
+   - Репозиторий: `rebekaee1/boevoebratstvo`
+   - Ветка: `deploy-backend`
+   - Добавьте переменные окружения (см. `backend/.env.example`)
+
+3. **Деплой Frontend:**
+   - App Platform → Dockerfile
+   - Репозиторий: `rebekaee1/boevoebratstvo`
+   - Ветка: `deploy-frontend`
+   - Build Argument: `VITE_API_URL=https://ваш-backend-домен/api`
+
+4. **Привяжите домен:**
+   - `наследникпобеды.рф` → frontend
+   - `api.наследникпобеды.рф` → backend
+
+**Полная документация:** [docs/DEPLOY_TIMEWEB.md](docs/DEPLOY_TIMEWEB.md)
+
+**Стоимость:** ~1625 ₽/месяц
 
 ---
 
