@@ -1,20 +1,6 @@
 # Инструкция по деплою на Timeweb Cloud
 
-## Домен: наследникпобеды.рф
-
----
-
-## ⚠️ Важно: Структура репозитория
-
-В репозитории https://github.com/rebekaee1/boevoebratstvo созданы **3 ветки:**
-
-| Ветка | Назначение | Dockerfile в корне |
-|-------|------------|-------------------|
-| `main` | Основная ветка с полным кодом | Нет |
-| `deploy-backend` | Деплой backend на Timeweb | `Dockerfile` (для NestJS) |
-| `deploy-frontend` | Деплой frontend на Timeweb | `Dockerfile` (для React + Nginx) |
-
-**Почему так?** Timeweb Cloud App Platform ищет `Dockerfile` только в корне репозитория. Поскольку у нас монорепо (backend + frontend), создаются отдельные ветки для деплоя каждого приложения.
+## Домен: nasledniki-pobedy.ru
 
 ---
 
@@ -89,7 +75,7 @@ postgresql://gen_user:ПАРОЛЬ@ХОСТ:5432/nasledniki?schema=public
 {
   "CORSRules": [
     {
-      "AllowedOrigins": ["https://наследникпобеды.рф"],
+      "AllowedOrigins": ["https://nasledniki-pobedy.ru"],
       "AllowedMethods": ["GET", "PUT", "POST"],
       "AllowedHeaders": ["*"],
       "MaxAgeSeconds": 3000
@@ -106,16 +92,16 @@ Timeweb предоставляет почтовый сервис для доме
 
 ### Вариант 1: Почта Timeweb (рекомендуется)
 
-1. Перейдите в **Домены и SSL** → выберите `наследникпобеды.рф`
+1. Перейдите в **Домены и SSL** → выберите `nasledniki-pobedy.ru`
 2. Настройте **Почту для домена**
-3. Создайте ящик: `noreply@наследникпобеды.рф`
+3. Создайте ящик: `noreply@nasledniki-pobedy.ru`
 4. **SMTP-параметры:**
    ```
    SMTP_HOST=smtp.timeweb.ru
    SMTP_PORT=465
-   SMTP_USER=noreply@наследникпобеды.рф
+   SMTP_USER=noreply@nasledniki-pobedy.ru
    SMTP_PASS=пароль-от-ящика
-   SMTP_FROM=Наследники Победы <noreply@наследникпобеды.рф>
+   SMTP_FROM=Наследники Победы <noreply@nasledniki-pobedy.ru>
    ```
 
 ### Вариант 2: Сторонний SMTP (Yandex 360, Mail.ru для бизнеса)
@@ -131,18 +117,11 @@ Timeweb предоставляет почтовый сервис для доме
 ### Шаг 1: Создание приложения
 
 1. Перейдите в **App Platform** → **Создать приложение**
-2. Выберите тип: **Docker** → **Dockerfile**
-3. Подключите репозиторий GitHub:
-   - Если еще не подключен: нажмите **Добавить аккаунт** → авторизуйтесь в GitHub
-   - Выберите репозиторий: `rebekaee1/boevoebratstvo`
-4. **⚠️ ВАЖНО — выберите ветку:** `deploy-backend`
-   - Timeweb автоматически использует `Dockerfile` из корня выбранной ветки
-   - В ветке `deploy-backend` уже лежит готовый Dockerfile для backend
-5. **Коммит:** Оставьте "Сборка по последнему выполненному коммиту" (автодеплой)
-6. **Регион:** Россия / Санкт-Петербург
-7. **Конфигурация:** 
-   - Фиксированная: 1 × 3.3 ГГц, 2 ГБ RAM, 30 ГБ NVMe
-   - **Стоимость:** ~810 ₽/мес
+2. Выберите **Dockerfile**
+3. Укажите репозиторий: `rebekaee1/boevoebratstvo`
+4. **Путь к Dockerfile:** `backend/Dockerfile`
+5. **Регион:** Россия / Санкт-Петербург
+6. **Конфигурация:** Минимум 1 CPU, 1 ГБ RAM (рекомендуется 2 ГБ)
 
 ### Шаг 2: Переменные окружения
 
@@ -150,25 +129,25 @@ Timeweb предоставляет почтовый сервис для доме
 
 | Переменная | Значение |
 |-----------|----------|
-| `DATABASE_URL` | `postgresql://gen_user:4jw%2Ce%3Ez6%3Fm%3B%7Def@192.168.0.4:5432/default_db` |
-| `JWT_SECRET` | | `afc9d83261c7033f223a0c4ab0a1dfe34d146029e8acb13cadc3fc86b3bd8c5d`) |
-| `JWT_REFRESH_SECRET` | `b174bf1a7a73c6b1acc617041802979edb87f23368a4f7e5db9e0325e2bb9140` |
+| `DATABASE_URL` | `postgresql://user:pass@host:5432/nasledniki?schema=public` |
+| `JWT_SECRET` | (сгенерируйте: `openssl rand -hex 32`) |
+| `JWT_REFRESH_SECRET` | (сгенерируйте: `openssl rand -hex 32`) |
 | `JWT_ACCESS_EXPIRATION` | `15m` |
 | `JWT_REFRESH_EXPIRATION` | `7d` |
 | `S3_ENDPOINT` | `https://s3.timeweb.cloud` |
 | `S3_BUCKET` | `nasledniki` |
-| `S3_ACCESS_KEY` | `JZ2192J3O9WZEECOX6S7` |
-| `S3_SECRET_KEY` | `vstA7AVOA3b5Fi9Dq874qhruB31kFU8qCjBeBc70` |
+| `S3_ACCESS_KEY` | (ваш ключ из п.3) |
+| `S3_SECRET_KEY` | (ваш секрет из п.3) |
 | `S3_REGION` | `ru-1` |
 | `SMTP_HOST` | `smtp.timeweb.ru` |
 | `SMTP_PORT` | `465` |
-| `SMTP_USER` | `noreply@наследникпобеды.рф` |
-| `SMTP_PASS` | `G=SU3PLA{kAgKr` |
-| `SMTP_FROM` | `Наследники Победы <noreply@наследникпобеды.рф>` |
+| `SMTP_USER` | `noreply@nasledniki-pobedy.ru` |
+| `SMTP_PASS` | (пароль) |
+| `SMTP_FROM` | `Наследники Победы <noreply@nasledniki-pobedy.ru>` |
 | `PORT` | `3000` |
-| `FRONTEND_URL` | `https://наследникпобеды.рф` |
-| `ADMIN_EMAIL` | `admin@наследникпобеды.рф` |
-| `ADMIN_PASSWORD` | `BB1qw!_ra` |
+| `FRONTEND_URL` | `https://nasledniki-pobedy.ru` |
+| `ADMIN_EMAIL` | `admin@nasledniki-pobedy.ru` |
+| `ADMIN_PASSWORD` | (ваш пароль) |
 
 ### Шаг 3: Запуск деплоя
 
@@ -194,12 +173,10 @@ curl https://app-xxx.timeweb-apps.com/api/docs
 ### Шаг 1: Создание приложения
 
 1. Перейдите в **App Platform** → **Создать приложение**
-2. Выберите тип: **Docker** → **Dockerfile**
-3. Подключите репозиторий: `rebekaee1/boevoebratstvo`
-4. **⚠️ ВАЖНО — выберите ветку:** `deploy-frontend`
-   - В ветке `deploy-frontend` уже лежит готовый Dockerfile для frontend
-5. **Коммит:** Оставьте "Сборка по последнему выполненному коммиту"
-6. **Регион:** Россия / Санкт-Петербург
+2. Выберите **Dockerfile**
+3. Укажите репозиторий: `rebekaee1/boevoebratstvo`
+4. **Путь к Dockerfile:** `frontend/Dockerfile`
+5. **Регион:** Россия / Санкт-Петербург
 
 ### Шаг 2: Build Argument
 
@@ -211,7 +188,7 @@ curl https://app-xxx.timeweb-apps.com/api/docs
 
 > ⚠️ **Важно:** Замените `app-xxx.timeweb-apps.com` на реальный технический домен вашего backend-приложения (из п.5).
 >
-> Позже, когда привяжете домен к backend, можно будет заменить на: `https://api.наследникпобеды.рф/api`
+> Позже, когда привяжете домен к backend, можно будет заменить на: `https://api.nasledniki-pobedy.ru/api`
 
 ### Шаг 3: Запуск
 
@@ -226,12 +203,12 @@ curl https://app-xxx.timeweb-apps.com/api/docs
 ### 7.1 Добавление домена в Timeweb Cloud
 
 1. Перейдите в **Домены и SSL** → **Добавить домен**
-2. Укажите: `наследникпобеды.рф`
+2. Укажите: `nasledniki-pobedy.ru`
 3. Привяжите к сервису: выберите **Frontend-приложение**
 
 ### 7.2 NS-серверы
 
-У регистратора домена (где куплен `наследникпобеды.рф`) пропишите NS-серверы Timeweb:
+У регистратора домена (где куплен `nasledniki-pobedy.ru`) пропишите NS-серверы Timeweb:
 
 ```
 ns1.timeweb.ru
@@ -244,14 +221,14 @@ ns4.timeweb.org
 
 ### 7.3 Субдомен для Backend API
 
-Создайте субдомен `api.наследникпобеды.рф`:
+Создайте субдомен `api.nasledniki-pobedy.ru`:
 
-1. В **Домены и SSL** → `наследникпобеды.рф` → **DNS**
+1. В **Домены и SSL** → `nasledniki-pobedy.ru` → **DNS**
 2. Добавьте **A-запись**:
    - Поддомен: `api`
    - Привязать к сервису: **Backend-приложение**
 3. Обновите CORS в backend (переменная `FRONTEND_URL`)
-4. Обновите `VITE_API_URL` в frontend на `https://api.наследникпобеды.рф/api`
+4. Обновите `VITE_API_URL` в frontend на `https://api.nasledniki-pobedy.ru/api`
 5. Передеплойте оба приложения
 
 ### 7.4 SSL-сертификат
@@ -268,9 +245,9 @@ SSL-сертификат Let's Encrypt **выпускается автомати
 
 ### Чек-лист после деплоя:
 
-- [ ] Главная страница открывается по `https://наследникпобеды.рф`
-- [ ] API отвечает по `https://api.наследникпобеды.рф/api`
-- [ ] Swagger работает: `https://api.наследникпобеды.рф/api/docs`
+- [ ] Главная страница открывается по `https://nasledniki-pobedy.ru`
+- [ ] API отвечает по `https://api.nasledniki-pobedy.ru/api`
+- [ ] Swagger работает: `https://api.nasledniki-pobedy.ru/api/docs`
 - [ ] Регистрация нового участника
 - [ ] Email-уведомление приходит
 - [ ] Вход администратора
