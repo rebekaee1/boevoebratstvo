@@ -1,18 +1,16 @@
 # ============================================
 # Backend — Наследники Победы (NestJS)
-# Multi-stage build для оптимального размера
 # ============================================
 
-# --- Stage 1: Build ---
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Копируем файлы зависимостей
+# Копируем файлы зависимостей из backend/
 COPY backend/package.json backend/package-lock.json ./
 COPY backend/prisma ./prisma/
 
-# Устанавливаем зависимости
+# Устанавливаем ВСЕ зависимости (включая dev для сборки)
 RUN npm ci
 
 # Генерируем Prisma Client
@@ -24,25 +22,26 @@ COPY backend/ ./
 # Собираем приложение
 RUN npm run build
 
+# Проверяем что dist собрался правильно
+RUN ls -la dist/src/main.js
+
+# Удаляем dev-зависимости после сборки
+RUN npm prune --omit=dev
+
 # --- Stage 2: Production ---
 FROM node:20-alpine AS production
 
 WORKDIR /app
 
-# Копируем package.json из backend
-COPY backend/package.json backend/package-lock.json ./
-COPY backend/prisma ./prisma/
-
-RUN npm ci --only=production
-
-# Генерируем Prisma Client для production
-RUN npx prisma generate
-
-# Копируем собранное приложение
-COPY --from=builder /app/dist ./dist
+# Копируем всё что нужно из builder
+COPY --from=builder /app/package.json ./
+COPY --from=builder /app/prisma ./prisma/
+COPY --from=builder /app/node_modules ./node_modules/
+COPY --from=builder /app/dist ./dist/
 
 # Порт приложения
 EXPOSE 3000
 
-# Запуск: миграции + seed + сервер
-CMD ["sh", "-c", "npx prisma migrate deploy && npx prisma db seed || true && node dist/main"]
+# Запуск: миграции → сервер
+# Путь: dist/src/main.js (NestJS сохраняет структуру каталогов при сборке)
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main"]
