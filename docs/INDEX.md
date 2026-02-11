@@ -10,8 +10,6 @@
 | [USER_GUIDE.md](USER_GUIDE.md) | Руководство пользователя (для администратора) |
 | [VIDEO_SCENARIO.md](VIDEO_SCENARIO.md) | Сценарий для записи видео-демонстрации |
 | [ACCEPTANCE_CHECKLIST.md](ACCEPTANCE_CHECKLIST.md) | Чек-лист приёмки проекта (89 пунктов) |
-| [**TIMEWEB_QUICKSTART.md**](TIMEWEB_QUICKSTART.md) | **🚀 Быстрый старт деплоя на Timeweb Cloud** |
-| [DEPLOY_TIMEWEB.md](DEPLOY_TIMEWEB.md) | Полная инструкция по развёртыванию на Timeweb Cloud |
 
 ### Диаграммы
 
