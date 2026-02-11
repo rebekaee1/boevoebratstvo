@@ -1,0 +1,424 @@
+/* Google Fonts - PT Serif + PT Sans для лучшей читаемости */
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap');
+
+/* Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   Base Styles
+============================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-body text-white bg-bg-dark antialiased;
+    line-height: 1.7;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+
+  /* Focus styles для accessibility */
+  :focus-visible {
+    outline: 2px solid #d4a017;
+    outline-offset: 2px;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-primary-dark;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary-light rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
+}
+
+/* ============================================
+   Component Styles
+============================================ */
+@layer components {
+  /* Кнопка Primary (золотая) */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-6 py-3 min-h-touch
+           font-body font-semibold
+           rounded-lg
+           shadow-gold
+           transition-all duration-300
+           hover:shadow-gold-lg hover:-translate-y-0.5
+           active:translate-y-0
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    color: #0d2137;
+    background: linear-gradient(to right, #d4a017, #f5b81c);
+  }
+
+  /* Кнопка Secondary (обводка) */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           px-6 py-3 min-h-touch
+           font-body font-semibold text-white
+           bg-transparent
+           border-2 border-white/30
+           rounded-lg
+           transition-all duration-300
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary:hover {
+    border-color: #d4a017;
+    color: #d4a017;
+  }
+
+  /* Кнопка Danger (красная) */
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2
+           px-6 py-3 min-h-touch
+           font-body font-semibold text-white
+           rounded-lg
+           transition-all duration-300
+           disabled:opacity-50 disabled:cursor-not-allowed;
+    background-color: #c41e3a;
+  }
+  .btn-danger:hover {
+    background-color: #9a1830;
+  }
+
+  /* Input field */
+  .input-field {
+    @apply w-full px-4 py-3 min-h-touch
+           font-body text-white
+           bg-white/5
+           border border-white/10
+           rounded-lg
+           placeholder:text-white/40
+           transition-all duration-300
+           focus:outline-none focus:bg-white/10;
+  }
+  .input-field:focus {
+    border-color: #d4a017;
+  }
+
+  /* Label */
+  .input-label {
+    @apply block mb-2 font-medium text-white/80;
+  }
+
+  /* Error message */
+  .input-error {
+    @apply mt-1 text-sm;
+    color: #e02548;
+  }
+
+  /* Card component */
+  .card {
+    @apply p-6
+           bg-white/5
+           border border-white/10
+           rounded-2xl
+           backdrop-blur-sm
+           transition-all duration-300;
+  }
+  .card:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-color: rgba(212, 160, 23, 0.3);
+  }
+
+  /* Section title */
+  .section-title {
+    @apply font-display text-3xl md:text-4xl lg:text-5xl font-bold text-white;
+  }
+
+  /* Section label (над заголовком) */
+  .section-label {
+    @apply text-sm font-semibold uppercase tracking-widest mb-2;
+    color: #d4a017;
+  }
+
+  /* ============================================
+     Landing Page Specific Styles
+  ============================================ */
+  
+  /* Георгиевская лента (hero section) */
+  .george-ribbon {
+    @apply absolute top-0 left-0 w-full h-1.5 z-20;
+    background: repeating-linear-gradient(
+      90deg,
+      #1a1a1a 0px,
+      #1a1a1a 20px,
+      #ff6b00 20px,
+      #ff6b00 40px
+    );
+    opacity: 0.8;
+  }
+
+  /* Декоративная звезда (hero section) */
+  .hero-star {
+    @apply absolute pointer-events-none opacity-10;
+    top: 15%;
+    right: 5%;
+    width: 120px;
+    height: 120px;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @media (min-width: 768px) {
+    .hero-star {
+      width: 200px;
+      height: 200px;
+      right: 10%;
+    }
+  }
+
+  /* Hero title gold с анимацией shimmer */
+  .hero-title-gold {
+    background: linear-gradient(135deg, #d4a017 0%, #f5d873 50%, #d4a017 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+  }
+
+  /* About cards */
+  .about-card {
+    @apply p-6 lg:p-8 rounded-2xl backdrop-blur-sm transition-all duration-300;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .about-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(212, 160, 23, 0.3);
+    transform: translateY(-4px);
+  }
+
+  .about-card-icon {
+    @apply w-14 h-14 flex items-center justify-center text-2xl rounded-xl mb-4;
+    background: linear-gradient(135deg, rgba(212, 160, 23, 0.15) 0%, rgba(212, 160, 23, 0.05) 100%);
+  }
+
+  .about-card-title {
+    @apply font-display text-xl font-semibold text-white mb-2;
+  }
+
+  .about-card-text {
+    @apply leading-relaxed;
+    color: #c5d0db;
+  }
+
+  /* Nomination cards */
+  .nomination-card {
+    @apply relative p-6 lg:p-8 rounded-2xl overflow-hidden transition-all duration-300;
+  }
+
+  .nomination-card::before {
+    content: '';
+    @apply absolute inset-0 transition-opacity duration-300;
+    opacity: 0.95;
+  }
+
+  .nomination-card:hover::before {
+    opacity: 0.9;
+  }
+
+  .nomination-card--vov::before {
+    background: linear-gradient(135deg, #c41e3a 0%, #8b1a2b 100%);
+  }
+
+  .nomination-card--svo::before {
+    background: linear-gradient(135deg, #1a3a5c 0%, #0d2137 100%);
+  }
+
+  .nomination-badge {
+    @apply inline-block px-3 py-1.5 text-xs font-semibold uppercase tracking-wider rounded mb-4;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .nomination-title {
+    @apply font-display text-2xl md:text-3xl font-bold text-white mb-2 leading-tight;
+  }
+
+  .nomination-subtitle {
+    @apply text-white/85 mb-4;
+  }
+
+  .format-tag {
+    @apply inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-full;
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Step cards */
+  .step-card {
+    @apply flex flex-col md:items-center md:text-center gap-4;
+  }
+
+  .step-number {
+    @apply flex-shrink-0 w-16 h-16 flex items-center justify-center 
+           font-display text-2xl font-bold text-accent-gold
+           rounded-2xl mx-auto md:mx-auto;
+    background: rgba(212, 160, 23, 0.1);
+    border: 2px solid rgba(212, 160, 23, 0.3);
+  }
+
+  .step-content {
+    @apply flex-1;
+  }
+
+  .step-title {
+    @apply font-display text-xl font-semibold text-white mb-1;
+  }
+
+  .step-text {
+    color: #c5d0db;
+  }
+
+  /* Gradient text (золотой) */
+  .text-gradient-gold {
+    background: linear-gradient(to right, #d4a017, #fcd34d, #d4a017);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply w-6 h-6 border-2 border-white/20 rounded-full animate-spin;
+    border-top-color: #d4a017;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center gap-1.5
+           px-3 py-1
+           text-sm font-medium
+           rounded-full;
+  }
+
+  .badge-gold {
+    @apply badge;
+    background-color: rgba(212, 160, 23, 0.1);
+    color: #d4a017;
+    border: 1px solid rgba(212, 160, 23, 0.3);
+  }
+
+  .badge-red {
+    @apply badge;
+    background-color: rgba(196, 30, 58, 0.1);
+    color: #e02548;
+    border: 1px solid rgba(196, 30, 58, 0.3);
+  }
+
+  .badge-green {
+    @apply badge;
+    background-color: rgba(45, 90, 61, 0.1);
+    color: #3c7751;
+    border: 1px solid rgba(45, 90, 61, 0.3);
+  }
+}
+
+/* ============================================
+   Utility Classes
+============================================ */
+@layer utilities {
+  /* Animation delays for staggered reveals */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+
+  /* Gradient backgrounds */
+  .bg-gradient-primary {
+    @apply bg-gradient-to-b from-bg-dark to-primary-dark;
+  }
+
+  .bg-gradient-hero {
+    background: 
+      radial-gradient(ellipse 80% 50% at 50% 0%, rgba(26, 58, 92, 0.4) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(196, 30, 58, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 30% at 20% 70%, rgba(212, 160, 23, 0.1) 0%, transparent 50%);
+  }
+
+  .bg-gradient-patriot {
+    background: 
+      linear-gradient(135deg, #0d2137 0%, #1a3a5c 50%, #0d2137 100%),
+      radial-gradient(ellipse 100% 100% at 20% 0%, rgba(196, 30, 58, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse 80% 80% at 80% 100%, rgba(212, 160, 23, 0.15) 0%, transparent 50%);
+  }
+
+  /* Shadow utilities for gold buttons */
+  .shadow-gold {
+    box-shadow: 0 4px 15px rgba(212, 160, 23, 0.3), 0 0 0 0 rgba(212, 160, 23, 0.4);
+  }
+
+  .shadow-gold-lg {
+    box-shadow: 0 8px 25px rgba(212, 160, 23, 0.4), 0 0 0 4px rgba(212, 160, 23, 0.15);
+  }
+}
+
+/* ============================================
+   Keyframe Animations
+============================================ */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Animation utility classes */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s linear infinite;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-pulse-subtle {
+  animation: pulse 2s ease-in-out infinite;
+}

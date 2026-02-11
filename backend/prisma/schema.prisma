@@ -1,0 +1,151 @@
+// Prisma Schema для платформы "Наследники Победы"
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// Перечисления (Enums)
+// ============================================
+
+enum Role {
+  student
+  expert
+  admin
+}
+
+enum Nomination {
+  vov // Великая Отечественная война
+  svo // Специальная военная операция
+}
+
+enum WorkType {
+  essay   // Сочинение
+  drawing // Рисунок
+}
+
+enum WorkStatus {
+  moderation // На модерации (после загрузки)
+  review     // На проверке (назначено эксперту)
+  rated      // Оценено
+}
+
+// ============================================
+// Модели (Tables)
+// ============================================
+
+/// Пользователи системы (участники, эксперты, администраторы)
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  passwordHash    String   @map("password_hash")
+  fullName        String   @map("full_name")
+  phone           String?
+  role            Role     @default(student)
+  
+  // Поля для участников (школьников)
+  school          String?
+  grade           String?  // Класс (1-11)
+  
+  // Статус и согласия
+  isBlocked       Boolean  @default(false) @map("is_blocked")
+  privacyAccepted Boolean  @default(false) @map("privacy_accepted")
+  
+  // Токен для обновления сессии
+  refreshToken    String?  @map("refresh_token")
+  
+  // Временные метки
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  // Связи
+  submittedWorks  Work[]   @relation("StudentWorks")
+  assignedWorks   Work[]   @relation("ExpertWorks")
+  ratings         Rating[]
+  passwordResets  PasswordReset[]
+
+  @@map("users")
+}
+
+/// Конкурсные работы
+model Work {
+  id          String     @id @default(uuid())
+  title       String     // Название работы
+  nomination  Nomination
+  workType    WorkType   @map("work_type")
+  
+  // Файл в S3
+  fileKey     String     @map("file_key")  // Ключ объекта в S3
+  fileName    String     @map("file_name") // Оригинальное имя файла
+  fileMime    String     @map("file_mime") // MIME-тип файла
+  fileSize    Int        @map("file_size") // Размер в байтах
+  
+  // Статус и назначение
+  status      WorkStatus @default(moderation)
+  
+  // Связи
+  studentId   String     @map("student_id")
+  student     User       @relation("StudentWorks", fields: [studentId], references: [id], onDelete: Cascade)
+  
+  expertId    String?    @map("expert_id")
+  expert      User?      @relation("ExpertWorks", fields: [expertId], references: [id], onDelete: SetNull)
+  
+  rating      Rating?
+  
+  // Временные метки
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@map("works")
+}
+
+/// Оценки работ
+model Rating {
+  id        String   @id @default(uuid())
+  score     Int      // Балл (шкала настраивается через Settings)
+  comment   String?  // Комментарий эксперта
+  
+  // Связи
+  workId    String   @unique @map("work_id")
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  
+  expertId  String   @map("expert_id")
+  expert    User     @relation(fields: [expertId], references: [id], onDelete: Cascade)
+  
+  // Временные метки
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("ratings")
+}
+
+/// Настройки системы (дедлайн, шкала оценки и т.д.)
+model Setting {
+  key       String   @id
+  value     Json     // Значение в формате JSON
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
+
+/// Запросы на сброс пароля
+model PasswordReset {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  
+  // Связи
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Временные метки
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("password_resets")
+}

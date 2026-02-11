@@ -1,0 +1,62 @@
+%%{init: {'theme': 'dark'}}%%
+flowchart TB
+    subgraph client [Frontend - React + Vite]
+        Landing[Лендинг]
+        Auth[Авторизация]
+        Register[Регистрация]
+        ForgotPwd[Сброс пароля]
+        Privacy[Политика конфиденциальности]
+        
+        subgraph student_lk [ЛК Участника]
+            StudentDash[Дашборд]
+            SubmitWork[Подача работы]
+            MyWorks[Мои работы]
+        end
+        
+        subgraph expert_lk [ЛК Эксперта]
+            ExpertDash[Дашборд]
+            AssignedWorks[Назначенные работы]
+            RateWork[Оценка работы]
+        end
+        
+        subgraph admin_panel [Админ-панель]
+            AdminDash[Дашборд + Графики]
+            Users[Пользователи]
+            Works[Работы]
+            Experts[Создание эксперта]
+            Settings[Настройки]
+        end
+    end
+
+    subgraph server [Backend - NestJS]
+        API[REST API :3000]
+        Swagger[Swagger /api/docs]
+        
+        subgraph modules [Модули]
+            AuthModule[AuthModule]
+            UsersModule[UsersModule]
+            WorksModule[WorksModule]
+            RatingsModule[RatingsModule]
+            AdminModule[AdminModule]
+            SettingsModule[SettingsModule]
+            MailModule[MailModule]
+            StorageModule[StorageModule]
+        end
+        
+        subgraph guards [Защита]
+            JWTGuard[JWT Guard]
+            RolesGuard[Roles Guard]
+            ThrottlerGuard[Rate Limiter]
+        end
+    end
+
+    subgraph storage [Инфраструктура]
+        PostgreSQL[(PostgreSQL :5432)]
+        MinIO[(MinIO S3 :9000)]
+        MailHog[MailHog SMTP :1025]
+    end
+
+    client -->|HTTP REST| API
+    API --> PostgreSQL
+    StorageModule --> MinIO
+    MailModule --> MailHog

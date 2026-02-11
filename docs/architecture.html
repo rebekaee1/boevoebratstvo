@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Архитектура — Наследники Победы</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        
+        h1 {
+            color: #d4a017;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #8a9aac;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .diagram-container {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .mermaid {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(212, 160, 23, 0.1);
+            border: 1px solid rgba(212, 160, 23, 0.3);
+            border-radius: 8px;
+            color: #d4a017;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .instructions code {
+            background: rgba(0,0,0,0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Архитектура платформы «Наследники Победы»</h1>
+    <p class="subtitle">Frontend ↔ Backend API ↔ PostgreSQL ↔ S3 Storage</p>
+    
+    <div class="diagram-container">
+        <div class="mermaid">
+flowchart TB
+    subgraph client ["🖥️ Frontend - React SPA (Vite)"]
+        Landing["🏠 Лендинг"]
+        Auth["🔐 Авторизация"]
+        StudentDashboard["👨‍🎓 ЛК Участника"]
+        ExpertDashboard["👨‍🏫 ЛК Эксперта"]
+        AdminDashboard["👨‍💼 ЛК Администратора"]
+    end
+    
+    subgraph server ["⚙️ Backend - NestJS"]
+        API["🌐 REST API"]
+        AuthModule["🔑 Auth Module"]
+        UsersModule["👥 Users Module"]
+        WorksModule["📄 Works Module"]
+        RatingsModule["⭐ Ratings Module"]
+        MailModule["📧 Mail Module"]
+        SettingsModule["⚙️ Settings Module"]
+    end
+    
+    subgraph storage ["💾 Хранилища (Timeweb Cloud)"]
+        PostgreSQL[("🐘 PostgreSQL\nManaged DB")]
+        S3[("📦 Object Storage\nS3 Protocol")]
+    end
+    
+    subgraph external ["🌍 Внешние сервисы"]
+        SMTP["📬 SMTP Server"]
+    end
+    
+    client -->|"HTTPS\nJWT Auth"| API
+    
+    API --> AuthModule
+    API --> UsersModule
+    API --> WorksModule
+    API --> RatingsModule
+    API --> SettingsModule
+    
+    AuthModule --> PostgreSQL
+    UsersModule --> PostgreSQL
+    WorksModule --> PostgreSQL
+    RatingsModule --> PostgreSQL
+    SettingsModule --> PostgreSQL
+    
+    WorksModule -->|"Stream Upload\nPresigned URL"| S3
+    
+    AuthModule --> MailModule
+    WorksModule --> MailModule
+    MailModule --> SMTP
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <strong>Инструкция:</strong> Чтобы сохранить как PNG, нажмите <code>Cmd+Shift+4</code> (Mac) 
+        или <code>Win+Shift+S</code> (Windows) и выделите диаграмму.
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                primaryColor: '#1a3a5c',
+                primaryTextColor: '#ffffff',
+                primaryBorderColor: '#d4a017',
+                lineColor: '#8a9aac',
+                secondaryColor: '#2d3748',
+                tertiaryColor: '#1e293b',
+                background: '#0f172a',
+                mainBkg: '#1e293b',
+                nodeBorder: '#d4a017',
+                clusterBkg: '#1e293b',
+                clusterBorder: '#d4a017',
+                titleColor: '#d4a017',
+                edgeLabelBackground: '#1e293b'
+            },
+            flowchart: {
+                curve: 'basis',
+                padding: 20,
+                nodeSpacing: 50,
+                rankSpacing: 80,
+                htmlLabels: true
+            }
+        });
+    </script>
+</body>
+</html>

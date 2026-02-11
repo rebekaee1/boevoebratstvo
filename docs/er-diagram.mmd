@@ -1,0 +1,63 @@
+%%{init: {'theme': 'dark'}}%%
+erDiagram
+    users {
+        uuid id PK
+        string email UK
+        string password_hash
+        string full_name
+        string phone
+        enum role "student | expert | admin"
+        string school
+        string grade
+        boolean is_blocked
+        boolean privacy_accepted
+        string refresh_token
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    works {
+        uuid id PK
+        string title
+        enum nomination "vov | svo"
+        enum work_type "essay | drawing"
+        string file_key
+        string file_name
+        string file_mime
+        int file_size
+        enum status "moderation | review | rated"
+        uuid student_id FK
+        uuid expert_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ratings {
+        uuid id PK
+        int score
+        string comment
+        uuid work_id FK,UK
+        uuid expert_id FK
+        timestamp created_at
+    }
+
+    settings {
+        string key PK
+        json value
+        timestamp updated_at
+    }
+
+    password_resets {
+        uuid id PK
+        string token UK
+        timestamp expires_at
+        boolean used
+        uuid user_id FK
+        timestamp created_at
+    }
+
+    users ||--o{ works : "student submits"
+    users ||--o{ works : "expert reviews"
+    users ||--o{ ratings : "expert rates"
+    works ||--o| ratings : "has rating"
+    users ||--o{ password_resets : "requests reset"
